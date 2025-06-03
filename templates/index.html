@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Asistente PyME</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <h1>🤖 Asistente de Cosmética Natural</h1>
+  <div id="chat-box"></div>
+  <input id="user-input" placeholder="Escribí tu consulta..." />
+  <button onclick="sendMessage()">Enviar</button>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("user-input");
+      const msg = input.value;
+      if (!msg) return;
+
+      const chatBox = document.getElementById("chat-box");
+      chatBox.innerHTML += `<div><strong>Vos:</strong> ${msg}</div>`;
+      input.value = "";
+
+      const response = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg })
+      });
+
+      const data = await response.json();
+      chatBox.innerHTML += `<div><strong>Asistente:</strong> ${data.response}</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  </script>
+</body>
+</html>
